@@ -5,6 +5,11 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 
+const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const messageRoutes = require('./routes/messageRoutes');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+
 // Load environment variables
 dotenv.config();
 
@@ -28,6 +33,14 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Ping Chat App Backend is Running!');
 });
+
+app.use('/api/user', userRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/message', messageRoutes);
+
+// Error Handling methods
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
